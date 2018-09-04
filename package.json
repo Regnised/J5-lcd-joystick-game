@@ -1,0 +1,11 @@
+{
+  "name": "j5-game",
+  "version": "1.0.0",
+  "description": "J5, arduino, Node.js, LDC display and Joystick",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Vasilii Onoprienko",
+  "license": "ISC"
+}
