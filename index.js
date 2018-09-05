@@ -25,16 +25,13 @@ board.on("ready", () => {
     let speed = 500;
     let repeater = setInterval(repeaterFn, speed);
     function repeaterFn(){
-        console.log('speed = ', speed);
         if (speed % 4 === 0) {
             spawnEnemy();
         } else {
             bricks.unshift([0, 0]);
         }
 
-        if (!bricks[0]) {
-            bricks[0] = [0, 0];
-        }
+        if (!bricks[0]) bricks[0] = [0, 0];
 
         if (str1[16] === 'E' || str2[16] === 'E') {
             clearInterval(repeater);
@@ -51,12 +48,11 @@ board.on("ready", () => {
         str1 = ((bricks[0][0] === 1) ? 'E' + str1: ' ' + str1).slice(0, 17);
         str2 = ((bricks[0][1] === 1) ? 'E' + str2: ' ' + str2).slice(0, 17);
 
-        if (bricks.length === 16) {
-            bricks.shift();
-        }
+        if (bricks.length === 16) bricks.shift();
 
-        console.log('str 1 = ', str1);
-        console.log('str 2 = ', str2);
+        // console.log('str 1 = ', str1);
+        // console.log('str 2 = ', str2);
+
         lcd.clear();
         lcd.cursor(0, 0).print(str1);
         lcd.cursor(1, 0).print(str2);
