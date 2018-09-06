@@ -50,9 +50,8 @@ board.on("ready", () => {
         }
 
         //Check on game win
-        if (speed === 290) {
+        if (speed === 310) {
             clearInterval(repeater);
-            clearInterval(carControl);
             lcd.clear().cursor(0, 0).print('   YOU WIN :smile:');
             return;
         }
