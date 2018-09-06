@@ -9,22 +9,31 @@ board.on("ready", () => {
     const lcd = new five.LCD({
         controller: "PCF8574"
     });
-    let A0, A1;
     let str1 = '               ';
     let str2 = '               ';
     let bricks = [];
-    // board.analogRead(0, function(value) {
-    //     A0 = value;
-    // });
-    // board.analogRead(1, function(value) {
-    //     A1 = value;
-    // });
-    lcd.useChar("euro");
-    // lcd.noCursor();
-
     let speed = 500;
+    let state = 0;
+    lcd.useChar("duck");
+    lcd.useChar("smile");
+    //read position of joystick
+    board.analogRead(1, function(value) {
+        if (value > 600) {
+            state = 0;
+            lcd.cursor(state, 15).print(':duck:')
+        } else if (value < 500){
+            state = 1;
+            lcd.cursor(state, 15).print(':duck:')
+        } else {
+            lcd.cursor(state, 15).print(':duck:')
+        }
+    });
+
+    //Start the game
     let repeater = setInterval(repeaterFn, speed);
+
     function repeaterFn(){
+        //Draw enemy or empty field
         if (speed % 4 === 0) {
             spawnEnemy();
         } else {
@@ -33,31 +42,34 @@ board.on("ready", () => {
 
         if (!bricks[0]) bricks[0] = [0, 0];
 
-        if (str1[16] === 'E' || str2[16] === 'E') {
+        //Check on game over
+        if (str1[15] === 'E' && state === 0 || str2[15] === 'E' && state === 1) {
             clearInterval(repeater);
             lcd.clear().cursor(0, 0).print('   GAME OVER');
             return;
         }
 
-        if (speed === 200) {
+        //Check on game win
+        if (speed === 290) {
             clearInterval(repeater);
-            lcd.clear().cursor(0, 0).print('   YOU WIN');
+            clearInterval(carControl);
+            lcd.clear().cursor(0, 0).print('   YOU WIN :smile:');
             return;
         }
 
-        str1 = ((bricks[0][0] === 1) ? 'E' + str1: ' ' + str1).slice(0, 17);
-        str2 = ((bricks[0][1] === 1) ? 'E' + str2: ' ' + str2).slice(0, 17);
+        str1 = ((bricks[0][0] === 1) ? 'E' + str1: ' ' + str1).slice(0, 16);
+        str2 = ((bricks[0][1] === 1) ? 'E' + str2: ' ' + str2).slice(0, 16);
 
+        //Delete overflow char
         if (bricks.length === 16) bricks.shift();
 
-        // console.log('str 1 = ', str1);
-        // console.log('str 2 = ', str2);
-
+        //print enemies on display
         lcd.clear();
         lcd.cursor(0, 0).print(str1);
         lcd.cursor(1, 0).print(str2);
-        clearInterval(repeater);
+
         speed = --speed;
+        clearInterval(repeater);
         repeater = setInterval(repeaterFn, speed);
     }
 
